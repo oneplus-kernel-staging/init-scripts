@@ -21,4 +21,4 @@ service fpay_hal /odm/bin/hw/vendor.oplus.hardware.biometrics.fingerprintpay@1.0
     group system input sdcard_rw sdcard_r
 
 on property:sys.boot_completed=1
-    setprop vendor.oplus.boot_complete 1
+    setprop vendor.oplus.ifaa.need_init 1

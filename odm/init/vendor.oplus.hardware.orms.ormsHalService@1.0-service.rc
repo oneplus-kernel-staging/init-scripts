@@ -82,3 +82,11 @@ on boot
     chmod 0644 /dev/cpuctl/foreground/cpu.uclamp.min
     chmod 0644 /dev/cpuctl/background/cpu.uclamp.min
     chmod 0644 /dev/cpuctl/top-app/cpu.uclamp.min
+    chmod 0664 /sys/devices/system/cpu/bus_dcvs/L3/boost_freq
+    chmod 0664 /sys/devices/system/cpu/bus_dcvs/DDR/boost_freq
+    chmod 0664 /sys/devices/system/cpu/bus_dcvs/LLCC/boost_freq
+    chmod 0664 /proc/oplus_scheduler/sched_assist/sched_assist_enabled
+    chmod 0664 /dev/cpuset/display/cpus
+    chmod 0664 /sys/class/devfreq/kgsl-busmon/min_freq
+    chmod 0664 /sys/class/devfreq/3d00000.qcom,kgsl-3d0/min_freq
+    chmod 0664 /sys/class/devfreq/1d84000.ufshc/min_freq

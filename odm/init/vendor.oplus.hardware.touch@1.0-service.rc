@@ -19,6 +19,7 @@ on boot
     chown system system /proc/touchpanel/curved_size
     chown system system /proc/touchpanel/charge_detect
     chown system system /proc/touchpanel/wireless_charge_detect
+    chown system system /proc/touchpanel/gesture_support
 
 on property:ro.boot.mode=charger
     start vendor.touch-1-0

@@ -39,6 +39,11 @@ import /vendor/etc/init/hw/init.qcom.test.rc
 import /odm/etc/init/hw/init.oppo.display.rc
 #endif /*VENDOR_EDIT*/
 
+#ifdef OPLUS_FEATURE_VIDEOLOGKIT
+#Yangwen@MM.MEDIASERVER.PLAYER, 2021/12/30, Add for : init.oplus.video.rc
+import /odm/etc/init/hw/init.oplus.video.rc
+#endif /*OPLUS_FEATURE_VIDEOLOGKIT*/
+
 #ifdef OPLUS_FEATURE_STORAGE_USB
 #Xuefeng.Peng@ANDROID.STORAGE.0, 2019/06/10, Add for init.oppo.reserve.rc
 import /odm/etc/init/init.oppo.reserve.rc
@@ -130,6 +135,9 @@ on post-fs
     #endif /* OPLUS_BUG_STABLITY */
 
 on early-boot
+    #ifdef OPLUS_FEATURE_PHOENIX
+    write /proc/bootprof "INIT:early-boot"
+    #endif
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
     # Allow subsystem (modem etc) debugging
@@ -363,6 +371,10 @@ on post-fs-data
     chmod 0664 /sys/devices/platform/msm_sdcc.3/polling
     chmod 0664 /sys/devices/platform/msm_sdcc.4/polling
 
+#ifdef CONFIG_OPLUS_FEATURE_INPUT_BOOST_V4
+    chown system system /proc/oplus_frame_boost/sys_ctrl
+#endif /* CONFIG_OPLUS_FEATURE_INPUT_BOOST_V4 */
+
     # Chown polling nodes as needed from UI running on system server
     chown system system /sys/devices/platform/msm_sdcc.1/polling
     chown system system /sys/devices/platform/msm_sdcc.2/polling
@@ -379,6 +391,7 @@ on post-fs-data
     mkdir /dev/socket/location 0770 gps gps
     mkdir /dev/socket/location/mq 0770 gps gps
     mkdir /dev/socket/location/xtra 0770 gps gps
+    mkdir /dev/socket/location/dgnss 0770 gps gps
 
     #Create directories for wifihal services
     mkdir /dev/socket/wifihal 0770 wifi wifi
@@ -626,14 +639,6 @@ service qmiproxy /system/bin/qmiproxy
     group radio diag
     disabled
 
-# Adjust socket buffer to enlarge TCP receive window for high bandwidth
-# but only if ro.data.large_tcp_window_size property is set.
-on property:ro.data.large_tcp_window_size=true
-    write /proc/sys/net/ipv4/tcp_adv_win_scale  2
-
-on property:sys.sysctl.tcp_adv_win_scale=*
-    write /proc/sys/net/ipv4/tcp_adv_win_scale ${sys.sysctl.tcp_adv_win_scale}
-
 #ifndef OPLUS_BUG_STABILITY
 #HuiTao@CONNECTIVITY.WIFI.BASE.1072015, 2015/04/24,
 #Modify for:close defualt debug log of wpa_supplicant
@@ -832,12 +837,12 @@ service qcom-post-boot /vendor/bin/init.qcom.post_boot.sh
     disabled
     oneshot
 
-service qti-testscripts /system/bin/sh /product/etc/init.qcom.testscripts.sh
-    class late_start
-    user root
-    disabled
-    oneshot
-    seclabel u:r:qti-testscripts:s0
+#service qti-testscripts /system/bin/sh /product/etc/init.qcom.testscripts.sh
+#    class late_start
+#    user root
+#    disabled
+#    oneshot
+#    seclabel u:r:qti-testscripts:s0
 
 service wifi-sdio-on /vendor/bin/init.qcom.sdio.sh
     class late_start
@@ -853,7 +858,7 @@ service wifi-crda /vendor/bin/init.crda.sh
 
 on property:sys.boot_completed=1
     start qcom-post-boot
-    start qti-testscripts
+#    start qti-testscripts
     # ifdef OPLUS_FEATURE_POWER_CPUFREQ
     setprop vendor.schedutil.enabled 1
 

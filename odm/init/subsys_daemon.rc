@@ -10,6 +10,12 @@ on property:ro.boot.hardware=qcom && property:persist.radio.multisim.config=dsds
     start qti-modem-daemon-0
     start qti-modem-daemon-1
 
+on property:ro.boot.hardware=qcom && property:persist.radio.multisim.config=dsda
+    stop qti-modem-daemon-0
+    stop qti-modem-daemon-1
+    start qti-modem-daemon-0
+    start qti-modem-daemon-1
+
 on property:ro.boot.hardware=qcom && property:persist.radio.multisim.config=ssss
     stop qti-modem-daemon-0
     stop qti-modem-daemon-1

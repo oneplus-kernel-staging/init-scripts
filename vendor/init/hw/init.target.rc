@@ -72,6 +72,9 @@ on early-fs
     start vold
 
 on fs
+    #ifdef OPLUS_FEATURE_PHOENIX
+    write /proc/bootprof "INIT:fs"
+    #endif
     start hwservicemanager
     #ifdef OPLUS_FORCE_AB_OTA_UPDATER
     #sam.li@SYSTEM，2021/09/02,add for mountting op2 to oplusreserve
@@ -84,7 +87,14 @@ on fs
     #Xuefeng.Peng@ANDROID.STORAGE.0, 2019/01/27, Add for remove 5G dump mountpoint to fstab
     mkdir /mnt/vendor/modemdump 0771 system system
     #endif /*OPLUS_FEATURE_STORAGE_CUSTOMIZE_PARTITION*/
+    
+    #ifdef OPLUS_FEATURE_PHOENIX
+    write /proc/bootprof "INIT:Mount_START"
+    #endif
     mount_all /vendor/etc/fstab.qcom --early
+    #ifdef OPLUS_FEATURE_PHOENIX
+    write /proc/bootprof "INIT:Mount_END"
+    #endif
 
     #ifdef OPLUS_FEATURE_STORAGE_CUSTOMIZE_PARTITION
     #Xuefeng.Peng@ANDROID.STORAGE.0, 2018/11/21, Add for 5G dump mountpoint
@@ -104,11 +114,17 @@ on post-fs
 
 on late-fs
     wait_for_prop hwservicemanager.ready true
+    #ifdef OPLUS_FEATURE_PHOENIX
+    write /proc/bootprof "INIT:Mount_START --late"
+    #endif
     #ifdef OPLUS_FEATURE_KEYSTORE
     #Junhao.Liang@ANDROID.SECURITY.2114107,2021/09/30,Add for wait_for_keymaster just like 8350S
     #exec_start wait_for_keymaster
     #endif /* OPLUS_FEATURE_KEYSTORE */
     mount_all /vendor/etc/fstab.qcom --late
+    #ifdef OPLUS_FEATURE_PHOENIX
+    write /proc/bootprof "INIT:Mount_END --late"
+    #endif
 
 on post-fs-data
     mkdir /vendor/data/tombstones 0771 system system
@@ -137,6 +153,10 @@ on post-fs-data
 
 on early-boot
     start vendor.sensors
+#ifdef OPLUS_FEATURE_SECURITY_COMMON
+#YongLin.Liu@BSP.Security.Basic 2021/10/26, add for CtsNativeVerifiedBootTestCases avbHashtreeNotUsingSha1
+    verity_update_state
+#endif /* OPLUS_FEATURE_SECURITY_COMMON */
 
 on boot
     write /dev/cpuset/audio-app/cpus 1-2
@@ -183,9 +203,6 @@ on property:vendor.display.lcd_density=640
 
 on boot && property:persist.vendor.usb.controller.default=*
     setprop vendor.usb.controller ${persist.vendor.usb.controller.default}
-
-on property:vendor.usb.controller=*
-    setprop sys.usb.controller ${vendor.usb.controller}
 
 on charger
     start vendor.power_off_alarm

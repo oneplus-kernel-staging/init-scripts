@@ -25,6 +25,7 @@ on late-fs
     chown system system /sys/class/leds/vibrator/motor_old
     chown system system /sys/class/leds/vibrator/waveform_index
     chown system system /sys/class/leds/vibrator/osc_cali
+    chmod 0660 /sys/class/leds/vibrator/osc_cali
     chown system system /sys/class/leds/vibrator/osc_data
     chown system system /sys/class/leds/vibrator/ram_test
     chown system system /sys/class/leds/vibrator/f0_data

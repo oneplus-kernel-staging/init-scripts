@@ -1,6 +1,6 @@
 on early-boot
     chown system system /dev/oplus_display
-    chmod 0666 /dev/oplus_display
+    chmod 0644 /dev/oplus_display
     chown system system /sys/kernel/oplus_display/dsi_cmd
     chown system system /sys/kernel/oplus_display/dim_alpha
     chown system system /sys/kernel/oplus_display/dim_dc_alpha

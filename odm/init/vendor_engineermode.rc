@@ -5,6 +5,7 @@ on post-fs-data
     mkdir /mnt/vendor/persist/engineermode
     chown system system /mnt/vendor/persist/engineermode
     chmod 0775 /mnt/vendor/persist/engineermode
+    chmod 0775 /mnt/vendor/persist/engineermode/engineermode_config
     chmod 0644 /mnt/vendor/persist/engineermode/ENG_RESULT
     mkdir /mnt/vendor/persist/engineermode/config
     chown system system /mnt/vendor/persist/engineermode/config
